@@ -94,7 +94,8 @@ public class CRSFactory {
         if (crs == null) {
             try {
                 String[] registryNameWithCode = splitRegistryNameAndCode(authorityAndSrid);
-                if (isRegistrySupported(registryNameWithCode[0])) {
+                crs = (CoordinateReferenceSystem) IdentifiableComponent.getComponent(new Identifier(registryNameWithCode[0], registryNameWithCode[1], ""));
+                if (isRegistrySupported(registryNameWithCode[0]) && crs == null) {
                     Registry registry = getRegistryManager().getRegistry(registryNameWithCode[0]);
                     Map<String, String> crsParameters = registry.getParameters(registryNameWithCode[1]);
                     if (crsParameters != null) {
@@ -164,7 +165,8 @@ public class CRSFactory {
         String refname = prjParameters.remove(PrjKeyParameters.REFNAME);
         if (refname != null) {
             String[] authorityNameWithKey = refname.split(":");
-            return CRSHelper.createCoordinateReferenceSystem(new Identifier(authorityNameWithKey[0], authorityNameWithKey[1], name), prjParameters);
+            CoordinateReferenceSystem crs = (CoordinateReferenceSystem) IdentifiableComponent.getComponent(new Identifier(authorityNameWithKey[0], authorityNameWithKey[1], ""));
+            return crs != null ? crs : CRSHelper.createCoordinateReferenceSystem(new Identifier(authorityNameWithKey[0], authorityNameWithKey[1], name), prjParameters);
         } else {
             return CRSHelper.createCoordinateReferenceSystem(new Identifier(CoordinateReferenceSystem.class, name), prjParameters);
         }
