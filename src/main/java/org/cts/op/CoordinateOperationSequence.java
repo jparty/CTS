@@ -140,9 +140,18 @@ public class CoordinateOperationSequence extends AbstractCoordinateOperation {
     @Override
     public double[] transform(double[] coord)
             throws IllegalCoordinateException {
+        //System.out.println("-----------------------------------------------");
         for (CoordinateOperation op : sequence) {
             coord = op.transform(coord);
+            /*if (!(op instanceof CoordinateOperationSequence)) {
+                System.out.print(op + " : ");
+                for (int i = 0; i < coord.length - 1; i++) {
+                    System.out.print(coord[i] + ", ");
+                }
+                System.out.println(coord[coord.length - 1]);
+            }*/
         }
+        //System.out.println("-----------------------------------------------");
         return coord;
     }
 

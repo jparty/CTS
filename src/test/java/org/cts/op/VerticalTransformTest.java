@@ -871,4 +871,49 @@ public class VerticalTransformTest extends BaseCoordinateTransformTest {
         assertTrue(checkEquals3D(" altitude to ellipsoidal height.", outputPoint, expectedPoint, 1E-3));
         assertTrue(checkEquals3D(" altitude to ellipsoidal height.", checkPoint, inputPoint, 1E-3));
     }
+
+    //@Test
+    public void testBete() throws CRSException, IllegalCoordinateException {
+            /*String prjString = "COMPD_CS[\"machin\",\n"
+                    + "    PROJCS[\"chouette\",\n"
+                    + "        GEOGCS[\"bidule\",\n"
+                    + "            DATUM[\"truc\",\n"
+                    + "                SPHEROID[\"GRS 1980\",6378137,100],\n"
+                    + "                TOWGS84[1]],\n"
+                    + "            PRIMEM[\"Greenwiche\",0],\n"
+                    + "            UNIT[\"degree\",0.01745329251994328]],\n"
+                    + "        UNIT[\"metre\",1],\n"
+                    + "        PROJECTION[\"Lambert_Conformal_Conic_2SP\"],\n"
+                    + "        PARAMETER[\"standard_parallel_1\",49],\n"
+                    + "        PARAMETER[\"standard_parallel_2\",44],\n"
+                    + "        PARAMETER[\"latitude_of_origin\",46.5],\n"
+                    + "        PARAMETER[\"central_meridian\",3],\n"
+                    + "        PARAMETER[\"false_easting\",700000],\n"
+                    + "        PARAMETER[\"false_northing\",6600000],\n"
+                    + "        AUTHORITY[\"EPSG\",\"2154\"],\n"
+                    + "        AXIS[\"X\",EAST],\n"
+                    + "        AXIS[\"Y\",NORTH]],\n"
+                    + "    VERT_CS[\"IGN69\",\n"
+                    + "        VERT_DATUM[\"Nivellement General de la France - IGN69\",2005],\n"
+                    + "        UNIT[\"m\",1.0],\n"
+                    + "        AXIS[\"Gravity-related height\",UP]]]";
+            CoordinateReferenceSystem crs = cRSFactory.createFromPrj(prjString);
+            assertTrue(crs != null);
+            CoordinateReferenceSystem crs2 = cRSFactory.getCRS("NAD27:101");
+            assertTrue(crs2 != null);
+        GeodeticCRS crs3 = (GeodeticCRS) cRSFactory.getCRS("IGNF:ED50");
+        GeodeticCRS crs4 = (GeodeticCRS) cRSFactory.getCRS("IGNF:NTF");
+        double[] inputPoint = new double[]{0, 0, 0};
+        double[] expectedPoint = new double[]{84, -37, -437};
+        double[] outputPoint = transform(crs3, crs4, inputPoint);
+        assertTrue(checkEquals3D("test", outputPoint, expectedPoint, 1E-3));*/
+        CompoundCRS sourceCRS = new CompoundCRS(new Identifier(CompoundCRS.class, "STPM50UTM21 + Danger 1950"),
+                (GeodeticCRS) cRSFactory.getCRS("IGNF:STPM50UTM21"),
+                new VerticalCRS(new Identifier("EPSG", "5792", "Danger 1950"), VerticalDatum.DANGER50, VerticalCRS.ALTITUDE_CS));
+        double[] inputPoint = new double[]{560806.129, 5182759.317, 100.000};
+        double[] outputPoint = transform(sourceCRS, sourceCRS, inputPoint);
+        System.out.println(inputPoint[0]+", "+inputPoint[1]+", "+inputPoint[2]);
+        System.out.println(outputPoint[0]+", "+outputPoint[1]+", "+outputPoint[2]);
+        assertTrue(checkEquals3D(" altitude to ellipsoidal height.", outputPoint, inputPoint, 1E-3));
+    }
 }
